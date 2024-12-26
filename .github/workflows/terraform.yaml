@@ -1,0 +1,22 @@
+name: Terraform CICD
+
+on:
+  pull_request:
+
+jobs:
+    Terraform:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Terraform init
+          run: terraform init
+
+        - name: Terraform plan
+          run: terraform plan
+
+        - name: Terraform apply
+          if: github.ref == 'refs/heads/main'
+          run: terraform apply --auto-approve
+
+
+
+    
