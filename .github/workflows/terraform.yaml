@@ -1,6 +1,7 @@
 name: Terraform CICD
 
 on:
+  push:
   pull_request:
 
 jobs:
