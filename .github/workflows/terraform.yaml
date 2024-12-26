@@ -9,8 +9,9 @@ on:
       - main
 
 jobs:
-  Terraform:
-      runs-on: ubuntu-latest
+  terraform:
+    name: 'Terraform deployment'
+    runs-on: ubuntu-latest
 
     env: 
       AWS_REGION: "eu-west-2"
