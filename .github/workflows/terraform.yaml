@@ -2,21 +2,46 @@ name: Terraform CICD
 
 on:
   push:
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
 
 jobs:
-    Terraform:
-        runs-on: ubuntu-latest
-        steps:
-        - name: Terraform init
-          run: terraform init
+  Terraform:
+      runs-on: ubuntu-latest
 
-        - name: Terraform plan
-          run: terraform plan
+    env: 
+      AWS_REGION: "eu-west-2"
+      TF_VERSION:  "1.10.2"
+    
+      
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v4
 
-        - name: Terraform apply
-          if: github.ref == 'refs/heads/main'
-          run: terraform apply --auto-approve
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with: 
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+        
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform plan
+        run: terraform plan
+
+      - name: Terraform apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply --auto-approve
 
 
 
